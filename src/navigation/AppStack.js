@@ -3,8 +3,8 @@ import React, { useContext } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AuthContext } from '../context/AuthContext';
 import LoginScreen from '../screens/LoginScreen';
-import HomeScreen from '../screens/HomeScreen';
 import { View, ActivityIndicator } from 'react-native';
+import AppDrawer from './AppDrawer'; // Importa o drawer com as telas protegidas
 
 const Stack = createStackNavigator();
 
@@ -22,7 +22,7 @@ export default function AppStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {userToken ? (
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="App" component={AppDrawer} />
       ) : (
         <Stack.Screen name="Login" component={LoginScreen} />
       )}

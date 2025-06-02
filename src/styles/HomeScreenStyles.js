@@ -1,4 +1,3 @@
-// src/styles/HomeScreenStyles.js
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
@@ -6,19 +5,19 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#f0f6fc', // azul claro de fundo
     padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#2196F3',
+    color: '#003f88', // azul escuro do menu
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 18,
-    color: '#555',
+    color: '#5a7ca8', // azul secundário do menu
     textAlign: 'center',
   },
 });
