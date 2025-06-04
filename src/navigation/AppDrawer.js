@@ -5,14 +5,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/AppDrawerStyles';
 import HomeScreen from '../screens/HomeScreen';
+import CasosScreen from '../screens/CasosScreen';
+/*import ProfileScreen from '../screens/ProfileScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import UsuariosScreen from '../screens/UsuariosScreen';
+import LaudosScreen from '../screens/LaudosScreen';*/
 
-// Você pode criar as telas depois:
+
+// Placeholders temporários - VOU USAR ELES ATÉ EFETIVAMENTE CRIAR AS TELAS
 const ProfileScreen = () => <View><Text>Perfil</Text></View>;
 const SettingsScreen = () => <View><Text>Configurações</Text></View>;
-const CasosScreen = () => <View><Text>Casos</Text></View>;
 const UsuariosScreen = () => <View><Text>Usuários</Text></View>;
 const LaudosScreen = () => <View><Text>Laudos</Text></View>;
-
 
 const Drawer = createDrawerNavigator();
 
