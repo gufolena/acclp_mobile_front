@@ -1,10 +1,10 @@
 // src/screens/CasosScreen.js
-import React, { useEffect, useState, useContext, useCallback } from 'react';
-import { View, Text, ActivityIndicator, TouchableOpacity, Alert, RefreshControl, FlatList } from 'react-native';
+import React, { useEffect, useState, useContext, useCallback, useMemo } from 'react'; // Adicionado useMemo
+import { View, Text, ActivityIndicator, TouchableOpacity, Alert, RefreshControl, FlatList, TextInput } from 'react-native'; // Adicionado TextInput
 import axios from 'axios';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext';
-import styles from '../styles/CasosScreenStyles'; // Removida a importação de 'colors' aqui
+import styles from '../styles/CasosScreenStyles';
 
 import { API_BASE_URL } from '../services/api';
 
@@ -12,6 +12,7 @@ export default function CasosScreen() {
   const [casos, setCasos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(''); // Estado para o termo de busca
   const { userToken } = useContext(AuthContext);
   const navigation = useNavigation();
 
@@ -50,8 +51,23 @@ export default function CasosScreen() {
     fetchCasos();
   }, [fetchCasos]);
 
+  // Lógica de filtragem dos casos
+  const filteredCasos = useMemo(() => {
+    if (!searchQuery) {
+      return casos; // Retorna todos os casos se não houver termo de busca
+    }
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return casos.filter(caso =>
+      caso.titulo_caso.toLowerCase().includes(lowerCaseQuery) ||
+      caso.processo_caso.toLowerCase().includes(lowerCaseQuery) ||
+      caso.status_caso.toLowerCase().includes(lowerCaseQuery) ||
+      caso.responsavel_caso.toLowerCase().includes(lowerCaseQuery)
+      // Adicione outros campos que você deseja pesquisar aqui
+    );
+  }, [casos, searchQuery]); // Re-calcula apenas quando 'casos' ou 'searchQuery' mudam
+
   const handleVisualizar = (caso) => {
-  navigation.navigate('VisualizarCaso', { casoData: caso }); // <-- Substitua esta linha
+    navigation.navigate('VisualizarCaso', { casoData: caso });
   };
 
   const handleEditar = (caso) => {
@@ -109,7 +125,6 @@ export default function CasosScreen() {
   if (loading && !refreshing) {
     return (
       <View style={styles.centered}>
-        {/* Usando a cor diretamente. Se #003f88 é primaryDark, use o valor exato. */}
         <ActivityIndicator size="large" color="#003f88" />
       </View>
     );
@@ -121,13 +136,22 @@ export default function CasosScreen() {
         <Text style={styles.addButtonText}>+ Novo Caso</Text>
       </TouchableOpacity>
 
-      {casos.length === 0 && !loading && !refreshing ? (
+      {/* Campo de busca */}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Pesquisar casos..."
+        placeholderTextColor="#888"
+        value={searchQuery}
+        onChangeText={setSearchQuery} // Atualiza o estado da busca a cada digitação
+      />
+
+      {filteredCasos.length === 0 && !loading && !refreshing ? (
         <View style={styles.centered}>
-          <Text>Nenhum caso encontrado. Crie um novo!</Text>
+          <Text>Nenhum caso encontrado. Crie um novo ou ajuste sua pesquisa!</Text>
         </View>
       ) : (
         <FlatList
-          data={casos}
+          data={filteredCasos} // Agora renderiza a lista filtrada
           keyExtractor={(item) => item._id}
           renderItem={renderCasoItem}
           contentContainerStyle={styles.scrollContainer}
@@ -135,7 +159,6 @@ export default function CasosScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              // Usando a cor diretamente. Se #003f88 é primaryDark, use o valor exato.
               colors={['#003f88']}
             />
           }

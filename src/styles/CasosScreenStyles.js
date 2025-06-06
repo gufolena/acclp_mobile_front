@@ -34,7 +34,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 15, // Reduzido para dar espaço ao searchInput
     elevation: 4,
     shadowColor: colors.primaryLight,
     shadowOffset: { width: 0, height: 4 },
@@ -46,6 +46,24 @@ export default StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  // --- Novo estilo para o campo de busca ---
+  searchInput: {
+    height: 50,
+    borderColor: colors.border,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: colors.textPrimary,
+    backgroundColor: colors.cardBackground,
+    marginBottom: 20, // Espaço entre o campo de busca e a lista de casos
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  // --- Fim do novo estilo ---
   scrollContainer: {
     paddingBottom: 20,
   },
@@ -75,20 +93,19 @@ export default StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between', // Ajustado para distribuir melhor os 3 botões
+    justifyContent: 'space-between',
     marginTop: 15,
     borderTopWidth: 1,
     borderTopColor: colors.border,
     paddingTop: 15,
   },
-  // Novo estilo para o botão de "Visualizar"
   viewButton: {
-    backgroundColor: colors.infoButton, // Azul ciano para Visualizar
+    backgroundColor: colors.infoButton,
     paddingVertical: 10,
-    paddingHorizontal: 15, // Ajuste de padding para 3 botões
+    paddingHorizontal: 15,
     borderRadius: 8,
     flex: 1,
-    marginRight: 8, // Espaço à direita para o próximo botão
+    marginRight: 8,
     alignItems: 'center',
     elevation: 2,
     shadowColor: colors.infoButton,
@@ -96,14 +113,13 @@ export default StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
-  // Estilo para o botão de "Editar" (ajustado o marginRight/marginLeft)
   editButton: {
     backgroundColor: colors.primaryLight,
     paddingVertical: 10,
-    paddingHorizontal: 15, // Ajuste de padding para 3 botões
+    paddingHorizontal: 15,
     borderRadius: 8,
     flex: 1,
-    marginRight: 8, // Espaço à direita para o próximo botão
+    marginRight: 8,
     alignItems: 'center',
     elevation: 2,
     shadowColor: colors.primaryLight,
@@ -111,14 +127,13 @@ export default StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
-  // Estilo para o botão de "Deletar" (ajustado o marginLeft)
   deleteButton: {
     backgroundColor: colors.danger,
     paddingVertical: 10,
-    paddingHorizontal: 15, // Ajuste de padding para 3 botões
+    paddingHorizontal: 15,
     borderRadius: 8,
     flex: 1,
-    marginLeft: 0, // Removido o marginLeft para que o marginRight do editar e o flex do deletar se ajustem
+    marginLeft: 0,
     alignItems: 'center',
     elevation: 2,
     shadowColor: colors.danger,
@@ -128,7 +143,7 @@ export default StyleSheet.create({
   },
   buttonText: {
     color: colors.cardBackground,
-    fontSize: 14, // Diminuído um pouco para caber os 3 botões
+    fontSize: 14,
     fontWeight: '600',
   },
 });
