@@ -1,18 +1,16 @@
+// AppDrawer.js
 import React, { useContext } from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/AppDrawerStyles';
+
+// Importe as telas
 import HomeScreen from '../screens/HomeScreen';
-import CasosScreen from '../screens/CasosScreen';
-/*import ProfileScreen from '../screens/ProfileScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import UsuariosScreen from '../screens/UsuariosScreen';
-import LaudosScreen from '../screens/LaudosScreen';*/
+import CasosStackNavigator from '../navigation/CasosStackNavigator'; // Importação do StackNavigator
 
-
-// Placeholders temporários - VOU USAR ELES ATÉ EFETIVAMENTE CRIAR AS TELAS
+// Placeholders temporários
 const ProfileScreen = () => <View><Text>Perfil</Text></View>;
 const SettingsScreen = () => <View><Text>Configurações</Text></View>;
 const UsuariosScreen = () => <View><Text>Usuários</Text></View>;
@@ -74,7 +72,6 @@ const CustomDrawerContent = (props) => {
         onPress={() => props.navigation.navigate('Laudos')}
       />
 
-
       <DrawerItem
         label="Sair"
         icon={({ color, size }) => <MaterialIcons name="logout" size={size} color={color} />}
@@ -96,12 +93,20 @@ export default function AppDrawer() {
         drawerLabelStyle: {
           fontSize: 16,
         },
+        headerStyle: {
+          backgroundColor: '#f0f6fc',
+        },
+        headerTintColor: '#003f88',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
       }}
     >
+      {/* Removidos os espaços em branco/quebras de linha entre os componentes Screen */}
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Perfil" component={ProfileScreen} />
       <Drawer.Screen name="Configurações" component={SettingsScreen} />
-      <Drawer.Screen name="Casos" component={CasosScreen} />
+      <Drawer.Screen name="Casos" component={CasosStackNavigator} options={{ headerShown: false }} />
       <Drawer.Screen name="Usuários" component={UsuariosScreen} />
       <Drawer.Screen name="Laudos" component={LaudosScreen} />
     </Drawer.Navigator>

@@ -2,19 +2,18 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { View, Text, ActivityIndicator, TouchableOpacity, Alert, RefreshControl, FlatList } from 'react-native';
 import axios from 'axios';
-import { useNavigation, useFocusEffect } from '@react-navigation/native'; // Importações adicionadas
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext';
-import styles from '../styles/CasosScreenStyles'; // Certifique-se de que este arquivo existe e está correto
+import styles from '../styles/CasosScreenStyles'; // Removida a importação de 'colors' aqui
 
-// Considerando que você tem um arquivo de configuração para a URL da API
-import { API_BASE_URL } from '../services/api'; // Crie este arquivo se ainda não tiver
+import { API_BASE_URL } from '../services/api';
 
 export default function CasosScreen() {
   const [casos, setCasos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false); // Novo estado para o pull-to-refresh
+  const [refreshing, setRefreshing] = useState(false);
   const { userToken } = useContext(AuthContext);
-  const navigation = useNavigation(); // Hook para navegação
+  const navigation = useNavigation();
 
   const fetchCasos = useCallback(async () => {
     setLoading(true);
@@ -36,11 +35,10 @@ export default function CasosScreen() {
       Alert.alert('Erro', 'Não foi possível carregar os casos. Verifique sua conexão ou tente novamente.');
     } finally {
       setLoading(false);
-      setRefreshing(false); // Finaliza o refresh, se estiver ocorrendo
+      setRefreshing(false);
     }
-  }, [userToken]); // userToken como dependência para useCallback
+  }, [userToken]);
 
-  // Usa useFocusEffect para recarregar os casos sempre que a tela estiver em foco
   useFocusEffect(
     useCallback(() => {
       fetchCasos();
@@ -52,8 +50,11 @@ export default function CasosScreen() {
     fetchCasos();
   }, [fetchCasos]);
 
+  const handleVisualizar = (caso) => {
+  navigation.navigate('VisualizarCaso', { casoData: caso }); // <-- Substitua esta linha
+  };
+
   const handleEditar = (caso) => {
-    // Navega para a tela de edição, passando os dados completos do caso
     navigation.navigate('EditarCaso', { casoId: caso._id, casoData: caso });
   };
 
@@ -71,7 +72,7 @@ export default function CasosScreen() {
               },
             });
             Alert.alert('Sucesso', 'Caso deletado com sucesso!');
-            fetchCasos(); // Recarrega a lista de casos após a exclusão
+            fetchCasos();
           } catch (error) {
             console.error('Erro ao deletar:', error);
             Alert.alert('Erro', 'Não foi possível deletar o caso. Tente novamente mais tarde.');
@@ -82,18 +83,19 @@ export default function CasosScreen() {
   };
 
   const handleNovoCaso = () => {
-    // Navega para a tela de criação de um novo caso
     navigation.navigate('CriarCaso');
   };
 
-  // Componente de renderização individual para o FlatList
   const renderCasoItem = ({ item: caso }) => (
     <View key={caso._id} style={styles.card}>
       <Text style={styles.cardTitle}>{caso.titulo_caso}</Text>
-      <Text>Processo: {caso.processo_caso}</Text>
-      <Text>Status: {caso.status_caso}</Text>
-      <Text>Responsável: {caso.responsavel_caso}</Text>
+      <Text style={styles.cardText}>Processo: {caso.processo_caso}</Text>
+      <Text style={styles.cardText}>Status: {caso.status_caso}</Text>
+      <Text style={styles.cardText}>Responsável: {caso.responsavel_caso}</Text>
       <View style={styles.buttonRow}>
+        <TouchableOpacity onPress={() => handleVisualizar(caso)} style={styles.viewButton}>
+          <Text style={styles.buttonText}>Visualizar</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => handleEditar(caso)} style={styles.editButton}>
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
@@ -104,9 +106,10 @@ export default function CasosScreen() {
     </View>
   );
 
-  if (loading && !refreshing) { // Mostra o ActivityIndicator apenas se estiver carregando inicialmente e não refrescando
+  if (loading && !refreshing) {
     return (
       <View style={styles.centered}>
+        {/* Usando a cor diretamente. Se #003f88 é primaryDark, use o valor exato. */}
         <ActivityIndicator size="large" color="#003f88" />
       </View>
     );
@@ -132,7 +135,8 @@ export default function CasosScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              colors={['#003f88']} // Cor do ícone de refresh
+              // Usando a cor diretamente. Se #003f88 é primaryDark, use o valor exato.
+              colors={['#003f88']}
             />
           }
         />
