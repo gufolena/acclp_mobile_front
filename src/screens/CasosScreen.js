@@ -1,10 +1,12 @@
 // src/screens/CasosScreen.js
-import React, { useEffect, useState, useContext, useCallback, useMemo } from 'react'; // Adicionado useMemo
-import { View, Text, ActivityIndicator, TouchableOpacity, Alert, RefreshControl, FlatList, TextInput } from 'react-native'; // Adicionado TextInput
+import React, { useEffect, useState, useContext, useCallback, useMemo } from 'react';
+import { View, Text, ActivityIndicator, TouchableOpacity, Alert, RefreshControl, FlatList, TextInput } from 'react-native';
 import axios from 'axios';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext';
 import styles from '../styles/CasosScreenStyles';
+import ConfirmationModal from '../components/ConfirmationModal';
+import CustomMessageModal from '../components/CustomMessageModal'; // <-- Importe o novo modal de mensagem
 
 import { API_BASE_URL } from '../services/api';
 
@@ -12,9 +14,19 @@ export default function CasosScreen() {
   const [casos, setCasos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(''); // Estado para o termo de busca
+  const [searchQuery, setSearchQuery] = useState('');
   const { userToken } = useContext(AuthContext);
   const navigation = useNavigation();
+
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+  const [casoToDeleteId, setCasoToDeleteId] = useState(null);
+
+  // --- Novos estados para o modal de mensagem customizado ---
+  const [isMessageModalVisible, setIsMessageModalVisible] = useState(false);
+  const [messageModalType, setMessageModalType] = useState('info'); // 'success' ou 'error'
+  const [messageModalTitle, setMessageModalTitle] = useState('');
+  const [messageModalMessage, setMessageModalMessage] = useState('');
+  // --- Fim dos novos estados ---
 
   const fetchCasos = useCallback(async () => {
     setLoading(true);
@@ -29,11 +41,19 @@ export default function CasosScreen() {
         setCasos(response.data.data);
       } else {
         console.error('Formato inesperado da API:', response.data);
-        Alert.alert('Erro', 'Formato de dados inesperado ao carregar casos.');
+        // Usar o novo modal para erros de formato também
+        setMessageModalType('error');
+        setMessageModalTitle('Erro de Dados');
+        setMessageModalMessage('Formato de dados inesperado ao carregar casos.');
+        setIsMessageModalVisible(true);
       }
     } catch (error) {
       console.error('Erro ao buscar casos:', error);
-      Alert.alert('Erro', 'Não foi possível carregar os casos. Verifique sua conexão ou tente novamente.');
+      // Usar o novo modal para erros de busca
+      setMessageModalType('error');
+      setMessageModalTitle('Erro de Conexão');
+      setMessageModalMessage('Não foi possível carregar os casos. Verifique sua conexão ou tente novamente.');
+      setIsMessageModalVisible(true);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -51,10 +71,9 @@ export default function CasosScreen() {
     fetchCasos();
   }, [fetchCasos]);
 
-  // Lógica de filtragem dos casos
   const filteredCasos = useMemo(() => {
     if (!searchQuery) {
-      return casos; // Retorna todos os casos se não houver termo de busca
+      return casos;
     }
     const lowerCaseQuery = searchQuery.toLowerCase();
     return casos.filter(caso =>
@@ -62,9 +81,8 @@ export default function CasosScreen() {
       caso.processo_caso.toLowerCase().includes(lowerCaseQuery) ||
       caso.status_caso.toLowerCase().includes(lowerCaseQuery) ||
       caso.responsavel_caso.toLowerCase().includes(lowerCaseQuery)
-      // Adicione outros campos que você deseja pesquisar aqui
     );
-  }, [casos, searchQuery]); // Re-calcula apenas quando 'casos' ou 'searchQuery' mudam
+  }, [casos, searchQuery]);
 
   const handleVisualizar = (caso) => {
     navigation.navigate('VisualizarCaso', { casoData: caso });
@@ -74,28 +92,52 @@ export default function CasosScreen() {
     navigation.navigate('EditarCaso', { casoId: caso._id, casoData: caso });
   };
 
-  const handleDeletar = async (id) => {
-    Alert.alert('Deletar caso', 'Tem certeza que deseja deletar este caso? Esta ação é irreversível.', [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Deletar',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            await axios.delete(`${API_BASE_URL}/casos/${id}`, {
-              headers: {
-                Authorization: `Bearer ${userToken}`,
-              },
-            });
-            Alert.alert('Sucesso', 'Caso deletado com sucesso!');
-            fetchCasos();
-          } catch (error) {
-            console.error('Erro ao deletar:', error);
-            Alert.alert('Erro', 'Não foi possível deletar o caso. Tente novamente mais tarde.');
-          }
+  const handleDeletar = (id) => {
+    setCasoToDeleteId(id);
+    setIsConfirmationModalVisible(true); // Abre o modal de confirmação
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsConfirmationModalVisible(false); // Fecha o modal de confirmação
+    if (!casoToDeleteId) return;
+
+    try {
+      await axios.delete(`${API_BASE_URL}/casos/${casoToDeleteId}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
         },
-      },
-    ]);
+      });
+      // Usa o CustomMessageModal para sucesso
+      setMessageModalType('success');
+      setMessageModalTitle('Sucesso!');
+      setMessageModalMessage('Caso deletado com sucesso!');
+      setIsMessageModalVisible(true);
+
+      fetchCasos();
+    } catch (error) {
+      console.error('Erro ao deletar:', error);
+      // Usa o CustomMessageModal para erro
+      setMessageModalType('error');
+      setMessageModalTitle('Erro ao Deletar');
+      setMessageModalMessage('Não foi possível deletar o caso. Tente novamente mais tarde.');
+      setIsMessageModalVisible(true);
+    } finally {
+      setCasoToDeleteId(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setIsConfirmationModalVisible(false);
+    setCasoToDeleteId(null);
+    console.log('Exclusão cancelada pelo usuário.');
+  };
+
+  // Função para fechar o modal de mensagem (sucesso/erro)
+  const handleCloseMessageModal = () => {
+    setIsMessageModalVisible(false);
+    setMessageModalTitle('');
+    setMessageModalMessage('');
+    setMessageModalType('info'); // Reseta para o tipo padrão
   };
 
   const handleNovoCaso = () => {
@@ -136,13 +178,12 @@ export default function CasosScreen() {
         <Text style={styles.addButtonText}>+ Novo Caso</Text>
       </TouchableOpacity>
 
-      {/* Campo de busca */}
       <TextInput
         style={styles.searchInput}
         placeholder="Pesquisar casos..."
         placeholderTextColor="#888"
         value={searchQuery}
-        onChangeText={setSearchQuery} // Atualiza o estado da busca a cada digitação
+        onChangeText={setSearchQuery}
       />
 
       {filteredCasos.length === 0 && !loading && !refreshing ? (
@@ -151,7 +192,7 @@ export default function CasosScreen() {
         </View>
       ) : (
         <FlatList
-          data={filteredCasos} // Agora renderiza a lista filtrada
+          data={filteredCasos}
           keyExtractor={(item) => item._id}
           renderItem={renderCasoItem}
           contentContainerStyle={styles.scrollContainer}
@@ -164,6 +205,26 @@ export default function CasosScreen() {
           }
         />
       )}
+
+      <ConfirmationModal
+        isVisible={isConfirmationModalVisible}
+        title="Confirmar Exclusão"
+        message="Você tem certeza que deseja deletar este caso? Esta ação não pode ser desfeita."
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        confirmText="Deletar Caso"
+        cancelText="Manter Caso"
+      />
+
+      {/* --- Adicione o CustomMessageModal aqui --- */}
+      <CustomMessageModal
+        isVisible={isMessageModalVisible}
+        title={messageModalTitle}
+        message={messageModalMessage}
+        type={messageModalType}
+        onClose={handleCloseMessageModal}
+      />
+      {/* --- Fim do CustomMessageModal --- */}
     </View>
   );
 }
