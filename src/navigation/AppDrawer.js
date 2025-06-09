@@ -1,4 +1,4 @@
-// AppDrawer.js
+// src/navigation/AppDrawer.js
 import React, { useContext } from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
@@ -8,12 +8,13 @@ import styles from '../styles/AppDrawerStyles';
 
 // Importe as telas
 import HomeScreen from '../screens/HomeScreen';
-import CasosStackNavigator from '../navigation/CasosStackNavigator'; // Importação do StackNavigator
+import CasosStackNavigator from './CasosStackNavigator'; 
+import UsuariosStackNavigator from './UsuariosStackNavigator'; 
 
-// Placeholders temporários
+// Placeholders temporários (REMOVA ou substitua conforme for criando)
 const ProfileScreen = () => <View><Text>Perfil</Text></View>;
 const SettingsScreen = () => <View><Text>Configurações</Text></View>;
-const UsuariosScreen = () => <View><Text>Usuários</Text></View>;
+// const UsuariosScreen = () => <View><Text>Usuários</Text></View>; // <-- REMOVA ESTA LINHA
 const LaudosScreen = () => <View><Text>Laudos</Text></View>;
 
 const Drawer = createDrawerNavigator();
@@ -63,7 +64,7 @@ const CustomDrawerContent = (props) => {
       <DrawerItem
         label="Usuários"
         icon={({ color, size }) => <MaterialIcons name="group" size={size} color={color} />}
-        onPress={() => props.navigation.navigate('Usuários')}
+        onPress={() => props.navigation.navigate('Usuarios')} 
       />
 
       <DrawerItem
@@ -102,12 +103,11 @@ export default function AppDrawer() {
         },
       }}
     >
-      {/* Removidos os espaços em branco/quebras de linha entre os componentes Screen */}
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Perfil" component={ProfileScreen} />
       <Drawer.Screen name="Configurações" component={SettingsScreen} />
       <Drawer.Screen name="Casos" component={CasosStackNavigator} options={{ headerShown: false }} />
-      <Drawer.Screen name="Usuários" component={UsuariosScreen} />
+      <Drawer.Screen name="Usuarios" component={UsuariosStackNavigator} options={{ headerShown: false }} /> 
       <Drawer.Screen name="Laudos" component={LaudosScreen} />
     </Drawer.Navigator>
   );
