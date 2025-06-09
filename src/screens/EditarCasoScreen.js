@@ -1,7 +1,7 @@
 // src/screens/EditarCasoScreen.js
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet, Alert, Platform } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native'; // Importar useRoute
+import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, Alert, Platform } from 'react-native'; // Removido StyleSheet
+import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import CustomMessageModal from '../components/CustomMessageModal';
@@ -9,112 +9,7 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { API_BASE_URL } from '../services/api';
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: '#f0f6fc',
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#003f88',
-    marginBottom: 25,
-    textAlign: 'center',
-  },
-  formGroup: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 16,
-    color: '#343a40',
-    marginBottom: 8,
-    fontWeight: '600',
-  },
-  input: {
-    backgroundColor: '#ffffff',
-    borderWidth: 1,
-    borderColor: '#d0e6f5',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: '#343a40',
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
-  },
-  pickerContainer: {
-    backgroundColor: '#ffffff',
-    borderWidth: 1,
-    borderColor: '#d0e6f5',
-    borderRadius: 10,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
-    overflow: 'hidden',
-  },
-  picker: {
-    height: 50,
-    width: '100%',
-    color: '#343a40',
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  dateInput: {
-    backgroundColor: '#ffffff',
-    borderWidth: 1,
-    borderColor: '#d0e6f5',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: '#343a40',
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
-    justifyContent: 'center',
-  },
-  dateInputText: {
-    fontSize: 16,
-    color: '#343a40',
-  },
-  placeholderText: {
-    color: '#999',
-  },
-  saveButton: {
-    backgroundColor: '#5a7ca8',
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 20,
-    elevation: 3,
-    shadowColor: '#5a7ca8',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-  },
-  saveButtonText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f6fc',
-  },
-});
+import styles from '../styles/EditarCasoScreenStyles'; 
 
 export default function EditarCasoScreen() {
   const navigation = useNavigation();
@@ -143,13 +38,11 @@ export default function EditarCasoScreen() {
   const [isMessageModalVisible, setIsMessageModalVisible] = useState(false);
   const [messageModalType, setMessageModalType] = useState('info');
   const [messageModalTitle, setMessageModalTitle] = useState('');
-  // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
   const [messageModalMessage, setMessageModalMessage] = useState('');
 
   const handleCloseMessageModal = () => {
     setIsMessageModalVisible(false);
     setMessageModalTitle('');
-    // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
     setMessageModalMessage('');
     if (messageModalType === 'success') {
       navigation.goBack();
@@ -267,7 +160,6 @@ export default function EditarCasoScreen() {
     if (!formData.titulo_caso || !formData.processo_caso || !formData.status_caso || !formData.responsavel_caso) {
       setMessageModalType('error');
       setMessageModalTitle('Campos Obrigatórios');
-      // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
       setMessageModalMessage('Por favor, preencha Título, Processo, Status e Responsável.');
       setIsMessageModalVisible(true);
       setLoading(false);
@@ -277,7 +169,6 @@ export default function EditarCasoScreen() {
     if (formData.data_nac_vitima_caso && !/^\d{4}-\d{2}-\d{2}$/.test(formData.data_nac_vitima_caso)) {
         setMessageModalType('error');
         setMessageModalTitle('Erro de Data');
-        // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
         setMessageModalMessage('Formato de data de nascimento inválido. Use AAAA-MM-DD.');
         setIsMessageModalVisible(true);
         setLoading(false);
@@ -294,7 +185,6 @@ export default function EditarCasoScreen() {
         console.error("Erro ao converter data para ISO (pós-picker):", e);
         setMessageModalType('error');
         setMessageModalTitle('Erro de Data');
-        // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
         setMessageModalMessage('Problema ao processar a data de nascimento. Tente novamente.');
         setIsMessageModalVisible(true);
         setLoading(false);
@@ -313,13 +203,11 @@ export default function EditarCasoScreen() {
       if (response.data.success) {
         setMessageModalType('success');
         setMessageModalTitle('Sucesso!');
-        // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
         setMessageModalMessage('Caso atualizado com sucesso!');
         setIsMessageModalVisible(true);
       } else {
         setMessageModalType('error');
         setMessageModalTitle('Erro ao Atualizar');
-        // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
         setMessageModalMessage(response.data.error || 'Não foi possível atualizar o caso.');
         setIsMessageModalVisible(true);
       }
@@ -330,19 +218,16 @@ export default function EditarCasoScreen() {
         console.error("Status do erro de resposta:", error.response.status);
         setMessageModalType('error');
         setMessageModalTitle('Erro do Servidor');
-        // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
         setMessageModalMessage(error.response.data.error || `Erro ${error.response.status}: Não foi possível atualizar o caso.`);
       } else if (error.request) {
         console.error("Nenhuma resposta recebida:", error.request);
         setMessageModalType('error');
         setMessageModalTitle('Erro de Conexão');
-        // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
         setMessageModalMessage('Não foi possível conectar ao servidor. Verifique sua rede.');
       } else {
         console.error("Erro na configuração da requisição:", error.message);
         setMessageModalType('error');
         setMessageModalTitle('Erro Interno');
-        // CORREÇÃO AQUI: mudado setMessageModalToMessage para setMessageModalMessage
         setMessageModalMessage('Ocorreu um erro inesperado. Tente novamente.');
       }
       setIsMessageModalVisible(true);
