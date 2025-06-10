@@ -4,7 +4,7 @@ import { View, Text, ActivityIndicator, ScrollView, Image } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import styles from '../styles/VisualizarCasoScreenStyles'; 
+import styles from '../styles/VisualizarUsuarioScreenStyles'; // Usando o estilo dedicado
 import { API_BASE_URL } from '../services/api';
 
 export default function VisualizarUsuarioScreen() {
@@ -27,9 +27,8 @@ export default function VisualizarUsuarioScreen() {
         },
       });
 
-      // --- CORRIGIDO AQUI: De 'response.data.dado' para 'response.data.dados' ---
-      if (response.data.sucesso && response.data.dados) { 
-        setUsuario(response.data.dados); // <-- Agora usa 'dados' corretamente
+      if (response.data.sucesso && response.data.dados) {
+        setUsuario(response.data.dados);
       } else {
         setError('Não foi possível carregar os detalhes completos do usuário.');
         console.error('Erro no formato da resposta da API de detalhes:', response.data);
@@ -43,21 +42,17 @@ export default function VisualizarUsuarioScreen() {
   }, [userToken, initialUsuarioData._id]);
 
   useEffect(() => {
-    // Se a foto_perfil_usuario NÃO veio nos dados iniciais (o que é o caso da lista),
-    // ou se veio vazia, fazemos uma nova requisição para obter os detalhes completos.
-    // O backend de detalhes sempre deve retornar a foto.
-    if (!initialUsuarioData.foto_perfil_usuario) { // Ou se initialUsuarioData.foto_perfil_usuario for uma string vazia
+    if (!initialUsuarioData.foto_perfil_usuario) {
       fetchUsuarioDetails();
     } else {
-      // Se já temos a foto nos dados iniciais (caso venha de outra rota que a inclua)
-      setLoading(false); 
+      setLoading(false);
     }
   }, [initialUsuarioData, fetchUsuarioDetails]);
 
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color={styles.primaryDark.color} /> {/* Usando a cor do estilo */}
+        <ActivityIndicator size="large" color={styles.primaryColorForIndicator} />
         <Text style={styles.loadingText}>Carregando detalhes do usuário...</Text>
       </View>
     );
@@ -79,7 +74,6 @@ export default function VisualizarUsuarioScreen() {
     );
   }
 
-  // Helper para formatar datas (opcional, mas bom para UX)
   const formatarData = (dataString) => {
     if (!dataString) return 'N/A';
     const data = new Date(dataString);
@@ -92,39 +86,27 @@ export default function VisualizarUsuarioScreen() {
       <Text style={styles.title}>Detalhes do Usuário</Text>
 
       <Text style={styles.sectionTitle}>Informações Pessoais</Text>
-      <View style={styles.detailCard}>
-        <Text style={styles.label}>Nome Completo:</Text>
-        <Text style={styles.value}>{usuario.nome_completo || 'N/A'}</Text>
-        <Text style={styles.label}>Primeiro Nome:</Text>
-        <Text style={styles.value}>{usuario.primeiro_nome || 'N/A'}</Text>
-        <Text style={styles.label}>Segundo Nome:</Text>
-        <Text style={styles.value}>{usuario.segundo_nome || 'N/A'}</Text>
-        <Text style={styles.label}>Data de Nascimento:</Text>
-        <Text style={styles.value}>{formatarData(usuario.data_nascimento)}</Text>
-      </View>
+      {/* Cada label/value em seu próprio detailCard */}
+      <View style={styles.detailCard}><Text style={styles.label}>Nome Completo:</Text><Text style={styles.value}>{usuario.nome_completo || 'N/A'}</Text></View>
+      <View style={styles.detailCard}><Text style={styles.label}>Primeiro Nome:</Text><Text style={styles.value}>{usuario.primeiro_nome || 'N/A'}</Text></View>
+      <View style={styles.detailCard}><Text style={styles.label}>Sobrenome:</Text><Text style={styles.value}>{usuario.segundo_nome || 'N/A'}</Text></View>
+      <View style={styles.detailCard}><Text style={styles.label}>Data de Nascimento:</Text><Text style={styles.value}>{formatarData(usuario.data_nascimento)}</Text></View>
 
       <Text style={styles.sectionTitle}>Contato</Text>
-      <View style={styles.detailCard}>
-        <Text style={styles.label}>Email:</Text>
-        <Text style={styles.value}>{usuario.email || 'N/A'}</Text>
-        <Text style={styles.label}>Telefone:</Text>
-        <Text style={styles.value}>{usuario.telefone || 'N/A'}</Text>
-      </View>
+      <View style={styles.detailCard}><Text style={styles.label}>Email:</Text><Text style={styles.value}>{usuario.email || 'N/A'}</Text></View>
+      <View style={styles.detailCard}><Text style={styles.label}>Telefone:</Text><Text style={styles.value}>{usuario.telefone || 'N/A'}</Text></View>
 
       <Text style={styles.sectionTitle}>Informações do Perfil</Text>
-      <View style={styles.detailCard}>
-        <Text style={styles.label}>Tipo de Perfil:</Text>
-        <Text style={styles.value}>{usuario.tipo_perfil || 'N/A'}</Text>
-        {usuario.tipo_perfil === 'Perito' && (
-          <>
-            <Text style={styles.label}>CRO / UF:</Text>
-            <Text style={styles.value}>{usuario.cro_uf || 'Não informado'}</Text>
-          </>
-        )}
-      </View>
+      <View style={styles.detailCard}><Text style={styles.label}>Tipo de Perfil:</Text><Text style={styles.value}>{usuario.tipo_perfil || 'N/A'}</Text></View>
+      {usuario.tipo_perfil === 'Perito' && (
+        <View style={styles.detailCard}>
+          <Text style={styles.label}>CRO / UF:</Text>
+          <Text style={styles.value}>{usuario.cro_uf || 'Não informado'}</Text>
+        </View>
+      )}
 
-      {/* --- Exibição da foto de perfil --- */}
-      {usuario.foto_perfil_usuario ? (
+      {/* --- Exibição da foto de perfil (apenas se disponível) --- */}
+      {usuario.foto_perfil_usuario && ( // <-- REMOVIDA A MENSAGEM DE "FOTO NÃO DISPONÍVEL"
         <>
           <Text style={styles.sectionTitle}>Foto de Perfil</Text>
           <View style={styles.detailCard}>
@@ -134,21 +116,12 @@ export default function VisualizarUsuarioScreen() {
             />
           </View>
         </>
-      ) : (
-        <Text style={{ textAlign: 'center', marginTop: 20, color: styles.textSecondary.color }}>
-          Foto de perfil não disponível.
-        </Text>
       )}
       {/* --- Fim da exibição da foto de perfil --- */}
 
       <Text style={styles.sectionTitle}>Outras Informações</Text>
-      <View style={styles.detailCard}>
-        <Text style={styles.label}>Data de Criação do Cadastro:</Text>
-        <Text style={styles.value}>{formatarData(usuario.data_criacao)}</Text>
-        <Text style={styles.label}>ID do Usuário:</Text>
-        <Text style={styles.value}>{usuario._id || 'N/A'}</Text>
-      </View>
-
+      <View style={styles.detailCard}><Text style={styles.label}>Data de Criação do Cadastro:</Text><Text style={styles.value}>{formatarData(usuario.data_criacao)}</Text></View>
+      <View style={styles.detailCard}><Text style={styles.label}>ID do Usuário:</Text><Text style={styles.value}>{usuario._id || 'N/A'}</Text></View>
     </ScrollView>
   );
 }

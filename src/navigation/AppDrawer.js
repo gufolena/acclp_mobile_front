@@ -14,7 +14,6 @@ import UsuariosStackNavigator from './UsuariosStackNavigator';
 // Placeholders temporários (REMOVA ou substitua conforme for criando)
 const ProfileScreen = () => <View><Text>Perfil</Text></View>;
 const SettingsScreen = () => <View><Text>Configurações</Text></View>;
-// const UsuariosScreen = () => <View><Text>Usuários</Text></View>; // <-- REMOVA ESTA LINHA
 const LaudosScreen = () => <View><Text>Laudos</Text></View>;
 
 const Drawer = createDrawerNavigator();

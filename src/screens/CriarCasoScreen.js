@@ -326,7 +326,7 @@ export default function CriarCasoScreen() {
           style={styles.input}
           value={formData.sexo_vitima_caso}
           onChangeText={(text) => handleChange('sexo_vitima_caso', text)}
-          placeholder="Ex: Masculino, Feminino, Outro"
+          placeholder="Ex: M, F , Outro"
         />
       </View>
 

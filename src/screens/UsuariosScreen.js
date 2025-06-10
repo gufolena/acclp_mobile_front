@@ -4,8 +4,8 @@ import { View, Text, ActivityIndicator, TouchableOpacity, Alert, RefreshControl,
 import axios from 'axios';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { AuthContext } from '../context/AuthContext';
-// IMPORTANTE: Agora importamos os estilos do CasosScreen
-import styles from '../styles/CasosScreenStyles'; // <--- ALTERADO AQUI!
+// IMPORTANTE: Agora importamos os estilos do UsuariosScreen
+import styles from '../styles/UsuariosScreenStyles'; // <--- ALTERADO AQUI!
 import ConfirmationModal from '../components/ConfirmationModal';
 import CustomMessageModal from '../components/CustomMessageModal';
 import { API_BASE_URL } from '../services/api';
