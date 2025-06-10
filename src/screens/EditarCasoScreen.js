@@ -368,7 +368,7 @@ export default function EditarCasoScreen() {
       </View>
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
-        <Text style={styles.saveButtonText}>Salvar Alterações</Text>
+        <Text style={styles.saveButtonText}>Atualizar Caso</Text>
       </TouchableOpacity>
 
       <CustomMessageModal
