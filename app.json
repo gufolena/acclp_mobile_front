@@ -14,21 +14,37 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Este app precisa acessar sua galeria para selecionar uma foto de perfil."
-      }
+        "NSPhotoLibraryUsageDescription": "Este app precisa acessar sua galeria para selecionar uma foto de perfil.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.gufolena.ACCLP"
     },
     "android": {
       "permissions": [
+        "READ_MEDIA_IMAGES",
+        "READ_EXTERNAL_STORAGE",
         "READ_MEDIA_IMAGES",
         "READ_EXTERNAL_STORAGE"
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/relatorio-medico.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.gufolena.ACCLP"
     },
     "web": {
       "favicon": "./assets/img/relatorio-medico.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "53ccc39c-22ad-4210-aa95-b709fa670097"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/53ccc39c-22ad-4210-aa95-b709fa670097"
     }
   }
 }
