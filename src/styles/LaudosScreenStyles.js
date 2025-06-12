@@ -1,0 +1,115 @@
+// src/styles/LaudosScreenStyles.js
+import { StyleSheet } from 'react-native';
+
+const colors = {
+  background: '#f0f6fc',
+  primaryDark: '#003f88',
+  primaryLight: '#5a7ca8',
+  infoButton: '#17a2b8',
+  danger: '#dc3545',
+  cardBackground: '#ffffff',
+  textPrimary: '#343a40',
+  textSecondary: '#6c757d',
+  border: '#d0e6f5',
+  success: '#28a745',
+  warning: '#ffc107',
+};
+
+export default StyleSheet.create({
+  container: {
+    flexGrow: 1, // Use flexGrow para ScrollView
+    backgroundColor: colors.background,
+    padding: 15,
+  },
+  headerSection: { // Novo estilo para o cabeçalho
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  screenTitle: { // Novo estilo para o título da tela
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: colors.primaryDark,
+    marginBottom: 5,
+  },
+  greetingText: { // Novo estilo para a saudação
+    fontSize: 16,
+    color: colors.textSecondary,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primaryDark,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginBottom: 20,
+    elevation: 3,
+    shadowColor: colors.primaryDark,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  addButtonText: {
+    color: colors.cardBackground,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  searchInput: {
+    height: 50,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: colors.textPrimary,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  laudosListSection: { // Novo estilo para a seção de listagem
+    backgroundColor: colors.cardBackground,
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 20,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: colors.primaryDark,
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    paddingBottom: 10,
+  },
+  emptyList: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 30,
+  },
+  cardText: { // Reutilizado de outros estilos, para as mensagens de "nenhum laudo"
+    fontSize: 15,
+    color: colors.textSecondary,
+    marginBottom: 5,
+    textAlign: 'center',
+  },
+  textSecondary: { // Reutilizado para a cor do ícone de pasta vazia
+    color: colors.textSecondary,
+  },
+  // Outros estilos como 'card', 'buttonRow', 'viewButton', etc., que você já tinha,
+  // podem ser mantidos aqui para quando você expandir a funcionalidade.
+});

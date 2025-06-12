@@ -9,12 +9,12 @@ import styles from '../styles/AppDrawerStyles';
 // Importe as telas
 import HomeScreen from '../screens/HomeScreen';
 import CasosStackNavigator from './CasosStackNavigator'; 
-import UsuariosStackNavigator from './UsuariosStackNavigator'; 
+import UsuariosStackNavigator from './UsuariosStackNavigator';
+import SettingsScreen from '../screens/SettingsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import LaudosScreen from '../screens/LaudosScreen';
 
-// Placeholders temporários (REMOVA ou substitua conforme for criando)
-const ProfileScreen = () => <View><Text>Perfil</Text></View>;
-const SettingsScreen = () => <View><Text>Configurações</Text></View>;
-const LaudosScreen = () => <View><Text>Laudos</Text></View>;
+
 
 const Drawer = createDrawerNavigator();
 
