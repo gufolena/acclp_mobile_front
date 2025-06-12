@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 export const loginService = async (email, senha) => {
-  const response = await axios.post('http://192.168.15.4:5000/api/auth/login', {
+  const response = await axios.post('https://acclp-mobile-back.onrender.com/api/auth/login', {
     email,
     senha,
   });
